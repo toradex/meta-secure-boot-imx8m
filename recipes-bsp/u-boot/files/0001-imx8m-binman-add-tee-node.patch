@@ -1,0 +1,190 @@
+From 015483904c524377820d81ecc1e0a907c5ffc466 Mon Sep 17 00:00:00 2001
+From: Yannic Moog <y.moog@phytec.de>
+Date: Fri, 10 Jan 2025 13:35:33 +0100
+Subject: [PATCH] arm: imx8m: add OP-TEE node
+
+Upstream-Status: Backport [v2025.04-rc3]
+
+Add tee node in SoC u-boot device trees. Use a kconfig entry to specify
+load and entry addresses for the op-tee image in the respective
+defconfig.
+Default IMX8M_OPTEE_LOAD_ADDR is supplied. To keep it simple, the same
+addresses are used for each SoC as are defined in upstream tf-a
+(BL32_BASE) [1].
+
+[1] https://github.com/ARM-software/arm-trusted-firmware/tree/master/plat/imx/imx8m
+
+Signed-off-by: Yannic Moog <y.moog@phytec.de>
+---
+ arch/arm/dts/imx8mm-u-boot.dtsi | 17 ++++++++++++++++-
+ arch/arm/dts/imx8mn-u-boot.dtsi | 17 ++++++++++++++++-
+ arch/arm/dts/imx8mp-u-boot.dtsi | 17 ++++++++++++++++-
+ arch/arm/dts/imx8mq-u-boot.dtsi | 17 ++++++++++++++++-
+ arch/arm/mach-imx/imx8m/Kconfig | 11 +++++++++++
+ 5 files changed, 75 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/dts/imx8mm-u-boot.dtsi b/arch/arm/dts/imx8mm-u-boot.dtsi
+index d31bc822532..ecc2319279e 100644
+--- a/arch/arm/dts/imx8mm-u-boot.dtsi
++++ b/arch/arm/dts/imx8mm-u-boot.dtsi
+@@ -164,6 +164,21 @@
+ 					};
+ #endif
+ 
++					tee: tee {
++						description = "OP-TEE";
++						type = "tee";
++						arch = "arm64";
++						compression = "none";
++						os = "tee";
++						load = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++						entry = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++
++						tee-os {
++							filename = "tee.bin";
++							optional;
++						};
++					};
++
+ 					binman_fip: fip {
+ 						arch = "arm64";
+ 						compression = "none";
+@@ -192,7 +207,7 @@
+ 						fdt = "fdt-SEQ";
+ 						firmware = "uboot";
+ #ifndef CONFIG_ARMV8_PSCI
+-						loadables = "atf";
++						loadables = "atf", "tee";
+ #endif
+ 					};
+ 				};
+diff --git a/arch/arm/dts/imx8mn-u-boot.dtsi b/arch/arm/dts/imx8mn-u-boot.dtsi
+index 6d80d856365..4a4498b36b0 100644
+--- a/arch/arm/dts/imx8mn-u-boot.dtsi
++++ b/arch/arm/dts/imx8mn-u-boot.dtsi
+@@ -240,6 +240,21 @@
+ 					};
+ #endif
+ 
++					tee: tee {
++						description = "OP-TEE";
++						type = "tee";
++						arch = "arm64";
++						compression = "none";
++						os = "tee";
++						load = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++						entry = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++
++						tee-os {
++							filename = "tee.bin";
++							optional;
++						};
++					};
++
+ 					binman_fip: fip {
+ 						arch = "arm64";
+ 						compression = "none";
+@@ -268,7 +283,7 @@
+ 						fdt = "fdt-SEQ";
+ 						firmware = "uboot";
+ #ifndef CONFIG_ARMV8_PSCI
+-						loadables = "atf";
++						loadables = "atf", "tee";
+ #endif
+ 					};
+ 				};
+diff --git a/arch/arm/dts/imx8mp-u-boot.dtsi b/arch/arm/dts/imx8mp-u-boot.dtsi
+index 56749ccacd2..9ede98a11e4 100644
+--- a/arch/arm/dts/imx8mp-u-boot.dtsi
++++ b/arch/arm/dts/imx8mp-u-boot.dtsi
+@@ -185,6 +185,21 @@
+ 					};
+ #endif
+ 
++					tee: tee {
++						description = "OP-TEE";
++						type = "tee";
++						arch = "arm64";
++						compression = "none";
++						os = "tee";
++						load = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++						entry = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++
++						tee-os {
++							filename = "tee.bin";
++							optional;
++						};
++					};
++
+ 					@fdt-SEQ {
+ 						description = "NAME";
+ 						type = "flat_dt";
+@@ -204,7 +219,7 @@
+ 						fdt = "fdt-SEQ";
+ 						firmware = "uboot";
+ #ifndef CONFIG_ARMV8_PSCI
+-						loadables = "atf";
++						loadables = "atf", "tee";
+ #endif
+ 					};
+ 				};
+diff --git a/arch/arm/dts/imx8mq-u-boot.dtsi b/arch/arm/dts/imx8mq-u-boot.dtsi
+index d7a83a78f4d..93e2ef27f7c 100644
+--- a/arch/arm/dts/imx8mq-u-boot.dtsi
++++ b/arch/arm/dts/imx8mq-u-boot.dtsi
+@@ -144,6 +144,21 @@
+ 					};
+ #endif
+ 
++					tee: tee {
++						description = "OP-TEE";
++						type = "tee";
++						arch = "arm64";
++						compression = "none";
++						os = "tee";
++						load = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++						entry = <CONFIG_IMX8M_OPTEE_LOAD_ADDR>;
++
++						tee-os {
++							filename = "tee.bin";
++							optional;
++						};
++					};
++
+ 					fdt {
+ 						compression = "none";
+ 						description = "NAME";
+@@ -164,7 +179,7 @@
+ 						fdt = "fdt";
+ 						firmware = "uboot";
+ #ifndef CONFIG_ARMV8_PSCI
+-						loadables = "atf";
++						loadables = "atf", "tee";
+ #endif
+ 					};
+ 				};
+diff --git a/arch/arm/mach-imx/imx8m/Kconfig b/arch/arm/mach-imx/imx8m/Kconfig
+index 76a8be7798c..0fe9c46e499 100644
+--- a/arch/arm/mach-imx/imx8m/Kconfig
++++ b/arch/arm/mach-imx/imx8m/Kconfig
+@@ -37,6 +37,17 @@ config SYS_HAS_ARMV8_SECURE_BASE
+ 	  If enabled, please also define the value for ARMV8_SECURE_BASE,
+ 	  for i.MX8M, it could be some address in OCRAM.
+ 
++config IMX8M_OPTEE_LOAD_ADDR
++	hex "Load address of OPTEE image"
++	default 0xbe000000 if IMX8MM
++	default 0xbe000000 if IMX8MN
++	default 0x56000000 if IMX8MP
++	default 0xfe000000 if IMX8MQ
++	help
++	  The load and entry address for the OPTEE image. This value defaults to
++	  the one defined in tf-a if not provided in the board defconfig file.
++
++
+ choice
+ 	prompt "NXP i.MX8M board select"
+ 	optional
+-- 
+GitLab
+
